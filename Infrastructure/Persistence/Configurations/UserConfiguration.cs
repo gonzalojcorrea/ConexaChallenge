@@ -16,8 +16,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(u => u.Id);
 
         // Configure the properties
-        builder.Property(u => u.Id)
-            .ValueGeneratedOnAdd();
         builder.Property(u => u.Username)
             .IsRequired()
             .HasMaxLength(100);

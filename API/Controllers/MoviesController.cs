@@ -1,6 +1,7 @@
 ﻿using Application.Common.Dtos;
 using Application.Common.Models;
 using Application.Features.Movies.Commands.CreateMovie;
+using Application.Features.Movies.Commands.SyncMovies;
 using Application.Features.Movies.Commands.UpdateMovie;
 using Application.Features.Movies.Queries.GetMovieById;
 using Application.Features.Movies.Queries.GetMovies;
@@ -81,5 +82,17 @@ public class MoviesController : ControllerBase
     {
         var result = await _mediator.Send(new UpdateMovieCommand(id, cmd), ct);
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Syncronize the StarWars movies
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("sync")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Sync()
+    {
+        await _mediator.Send(new SyncMoviesCommand());
+        return Ok(new { message = "Movies synchronized successfully." });
     }
 }

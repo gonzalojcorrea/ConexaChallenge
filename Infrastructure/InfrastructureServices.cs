@@ -3,6 +3,7 @@ using Domain.Interfaces;
 using Infrastructure.Configurations.Authentication;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,11 @@ public static class InfrastructureServices
         // 4. Configure Authentication & Authorization
         services.AddAuthenticationExtension(configuration, jwt);
         services.AddAuthorization();
+
+        services.AddHttpClient<ISwapiClient, SwapiClient>(c =>
+        {
+            c.BaseAddress = new Uri("https://www.swapi.tech/api/");
+        });
 
         return services;
     }
