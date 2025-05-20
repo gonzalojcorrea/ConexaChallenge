@@ -86,9 +86,9 @@ public class ErrorHandlingMiddleware
             var problem = new ProblemDetails
             {
                 Type = "https://api.conexa.com/errors/internal-server-error",
-                Title = "An unexpected error occurred.",
+                Title = ex.Message,
                 Status = (int)HttpStatusCode.InternalServerError,
-                Detail = ex.Message
+                Detail = ex.ToString()
             };
 
             await WriteProblemAsync(context, problem);
