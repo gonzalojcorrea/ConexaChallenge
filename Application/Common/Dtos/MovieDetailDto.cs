@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using System.Data;
 
-namespace Application.Features.Movies.Dtos;
+namespace Application.Common.Dtos;
 
 /// <summary>
 /// Data Transfer Object for movie details.

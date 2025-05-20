@@ -2,11 +2,24 @@
 
 namespace Application.Common.Exceptions;
 
-/// <summary>
-/// Exception thrown when validation fails.
-/// </summary>
-/// <param name="errors"></param>
-public class ValidationException(IEnumerable<ValidationFailure> errors) : Exception
+public class ValidationException : Exception
 {
-    public IEnumerable<ValidationFailure> Errors { get; } = errors;
+    public IDictionary<string, string[]> Errors { get; }
+
+    public ValidationException(IEnumerable<ValidationFailure> failures)
+        : base("One or more validation errors occurred.")
+    {
+        Errors = failures
+            .GroupBy(e => e.PropertyName)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Select(f => f.ErrorMessage).ToArray()
+            );
+    }
+
+    public ValidationException(IDictionary<string, string[]> errors)
+        : base("One or more validation errors occurred.")
+    {
+        Errors = errors;
+    }
 }

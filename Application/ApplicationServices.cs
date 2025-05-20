@@ -1,4 +1,7 @@
-﻿using Domain.Entities;
+﻿using Application.Behaviors;
+using Domain.Entities;
+using MediatR;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +23,13 @@ public static class ApplicationServices
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(ApplicationServices).Assembly));
 
-        // 2. Password Hasher
+        // 2. FluentValidation: registra todos los IValidator<T> del ensamblado
+        services.AddValidatorsFromAssembly(typeof(ApplicationServices).Assembly);
+
+        // 3. Pipeline: inyecta el ValidationBehavior para que MediatR valide antes de cada handler
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        // 4. Password Hasher
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
         return services;

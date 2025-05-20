@@ -1,4 +1,4 @@
-﻿using Application.Features.Movies.Dtos;
+﻿using Application.Common.Dtos;
 using MediatR;
 
 namespace Application.Features.Movies.Commands.UpdateMovie;

@@ -1,6 +1,6 @@
-﻿using Application.Common.Exceptions;
+﻿using Application.Common.Dtos;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Application.Features.Movies.Dtos;
 using MediatR;
 
 namespace Application.Features.Movies.Queries.GetMovies;

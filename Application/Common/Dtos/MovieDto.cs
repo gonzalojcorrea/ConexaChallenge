@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Movies.Dtos;
+﻿namespace Application.Common.Dtos;
 
 /// <summary>
 /// Data Transfer Object for Movie.

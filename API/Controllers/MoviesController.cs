@@ -1,7 +1,7 @@
-﻿using Application.Common.Models;
+﻿using Application.Common.Dtos;
+using Application.Common.Models;
 using Application.Features.Movies.Commands.CreateMovie;
 using Application.Features.Movies.Commands.UpdateMovie;
-using Application.Features.Movies.Dtos;
 using Application.Features.Movies.Queries.GetMovieById;
 using Application.Features.Movies.Queries.GetMovies;
 using MediatR;

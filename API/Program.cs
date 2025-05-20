@@ -1,6 +1,7 @@
 using Application;
 using Infrastructure;
-using Infrastructure.Configurations.Extensions;
+using Infrastructure.Configurations.Filters;
+using Infrastructure.Configurations.Middleware;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +10,19 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Swagger & Controllers
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers()
-    .AddCustomFilters()
-    .AddJsonOptions(opts =>
-        opts.JsonSerializerOptions.ReferenceHandler =
-            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
+builder.Services
+    .AddControllers(options =>
+    {
+        options.Filters.Add<SuccessResponseFilter>();
+    })
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressModelStateInvalidFilter = true;
+    })
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 
 // 2. Infrastructure (EF, Repos, UoW, Authentication & Authorization)
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Default"), builder.Configuration);
@@ -29,17 +38,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.ConfigureMiddlewares();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// Create a scope to retrieve scoped services
+// Apply any pending migrations
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    // Apply any pending migrations
     db.Database.Migrate();
 }
 

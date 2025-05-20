@@ -1,17 +1,11 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Interfaces;
 using Infrastructure.Configurations.Authentication;
-using Infrastructure.Configurations.Extensions;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Infrastructure;
 
@@ -40,10 +34,8 @@ public static class InfrastructureServices
         var section = configuration.GetSection(JwtSettings.SectionName);
         var jwt = section.Get<JwtSettings>();
 
-        // 4. Configure Authentication & JWT Bearer
+        // 4. Configure Authentication & Authorization
         services.AddAuthenticationExtension(configuration, jwt);
-
-        // 5. Configure Authorization
         services.AddAuthorization();
 
         return services;

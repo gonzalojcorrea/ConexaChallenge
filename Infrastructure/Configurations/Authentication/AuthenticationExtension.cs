@@ -1,5 +1,4 @@
-﻿using Infrastructure.Configurations.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Infrastructure.Configurations.Extensions;
+namespace Infrastructure.Configurations.Authentication;
 
 /// <summary>
 /// Extension methods for adding authentication services.
@@ -55,7 +54,6 @@ public static class AuthenticationExtension
                         Title = "Unauthorized",
                         Status = StatusCodes.Status401Unauthorized,
                         Detail = "Authentication is required to access this resource.",
-                        Instance = ctx.Request.Path
                     };
 
                     ctx.Response.StatusCode = pd.Status.Value;
@@ -70,7 +68,6 @@ public static class AuthenticationExtension
                         Title = "Forbidden",
                         Status = StatusCodes.Status403Forbidden,
                         Detail = "You do not have permission to access this resource.",
-                        Instance = ctx.Request.Path
                     };
 
                     ctx.Response.StatusCode = pd.Status.Value;
