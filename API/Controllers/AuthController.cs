@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <param name="cmd">Registration data: username, password, and role.</param>
     /// <returns>JWT token wrapped in a SuccessResponse.</returns>
-    [HttpPost("register")]
+    [HttpPost("sign-up")]
     [SwaggerOperation(
         Summary = "Register a new user",
         Description = "Creates a new user account with the specified role and returns an access JWT token."
