@@ -31,7 +31,7 @@ public class MoviesController : ControllerBase
     /// <param name="ct">Cancellation token.</param>
     /// <returns>A list of movies wrapped in a SuccessResponse.</returns>
     [HttpGet]
-    [Authorize(Roles = "Admin, User")]
+    [Authorize(Roles = "Master, Padawan")]
     [ProducesResponseType(typeof(SuccessResponse<IEnumerable<MovieDto>>), StatusCodes.Status200OK)]
     [SwaggerOperation(
         Summary = "Get all movies",
@@ -55,7 +55,7 @@ public class MoviesController : ControllerBase
     /// <param name="ct">Cancellation token.</param>
     /// <returns>A single movie wrapped in a SuccessResponse.</returns>
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Admin, User")]
+    [Authorize(Roles = "Padawan")]
     [ProducesResponseType(typeof(SuccessResponse<MovieDetailDto>), StatusCodes.Status200OK)]
     [SwaggerOperation(
         Summary = "Get movie by ID",
@@ -79,7 +79,7 @@ public class MoviesController : ControllerBase
     /// <param name="ct">Cancellation token.</param>
     /// <returns>201 Created with Location header pointing to the new movie.</returns>
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Master")]
     [ProducesResponseType(typeof(SuccessResponse<string>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
@@ -107,7 +107,7 @@ public class MoviesController : ControllerBase
     /// <param name="ct">Cancellation token.</param>
     /// <returns>200 OK with updated movie.</returns>
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Master")]
     [ProducesResponseType(typeof(SuccessResponse<MovieDetailDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
@@ -134,7 +134,7 @@ public class MoviesController : ControllerBase
     /// </summary>
     /// <returns>A 200 OK status indicating successful synchronization.</returns>
     [HttpPost("sync")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Master")]
     [ProducesResponseType(typeof(SuccessResponse<string>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
@@ -159,7 +159,7 @@ public class MoviesController : ControllerBase
     /// <param name="id">The GUID of the movie to delete.</param>
     /// <returns>204 No Content on success.</returns>
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Master")]
     [ProducesResponseType(typeof(SuccessResponse<string>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
