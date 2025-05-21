@@ -49,19 +49,19 @@ public class AppDbContext : DbContext
     /// <returns></returns>
     private T ApplySoftDeleteRules<T>(Func<T> baseSave)
     {
-        var utcNow = DateTime.UtcNow;
+        var utcNowArg = DateTime.UtcNow.AddHours(-3);
 
         foreach (var entry in ChangeTracker.Entries<BaseEntity>())
         {
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.CreatedAt = utcNow;
+                    entry.Entity.CreatedAt = utcNowArg;
                     break;
 
                 case EntityState.Deleted:
                     entry.State = EntityState.Modified;
-                    entry.Entity.DeletedAt = utcNow;
+                    entry.Entity.DeletedAt = utcNowArg;
                     break;
             }
         }

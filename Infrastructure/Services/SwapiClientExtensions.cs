@@ -16,7 +16,7 @@ public static class SwapiClientExtensions
     {
         services.AddHttpClient<ISwapiClient, SwapiClient>(client =>
         {
-            client.BaseAddress = new Uri("https://www.swapch/api/");
+            client.BaseAddress = new Uri("https://www.swapi.tech/api/");
         })
         .AddPolicyHandler((sp, request) => GetRetryPolicy(sp.GetRequiredService<ILogger<SwapiClient>>()))
         .AddPolicyHandler((sp, request) => GetCircuitBreakerPolicy(sp.GetRequiredService<ILogger<SwapiClient>>()))
