@@ -5,7 +5,7 @@ services:
     image: ${DOCKER_REGISTRY-}api
     build:
       context: .
-      dockerfile: API/Dockerfile
+      dockerfile: src/API/Dockerfile
     depends_on:
       - db
 
