@@ -31,6 +31,7 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Characters")
                         .IsRequired()
+                        .HasMaxLength(2000)
                         .HasColumnType("jsonb");
 
                     b.Property<DateTime>("CreatedAt")
