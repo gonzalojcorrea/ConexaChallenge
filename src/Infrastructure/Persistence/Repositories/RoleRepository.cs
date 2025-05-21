@@ -28,5 +28,5 @@ public class RoleRepository : IRoleRepository
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<Role?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
-        => await _context.Roles.FirstOrDefaultAsync(r => r.Name == name, cancellationToken);
+        => await _context.Roles.FirstOrDefaultAsync(r => r.Name.ToUpper() == name.ToUpper(), cancellationToken);
 }
