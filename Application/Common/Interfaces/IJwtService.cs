@@ -2,6 +2,9 @@
 
 namespace Application.Common.Interfaces;
 
+/// <summary>
+/// Interface for JWT service.
+/// </summary>
 public interface IJwtService
 {
     /// <summary>

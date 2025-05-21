@@ -4,6 +4,9 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Persistence.Configurations;
 
+/// <summary>
+/// Base configuration for entities inheriting from BaseEntity.
+/// </summary>
 public static class BaseEntityConfiguration
 {
     /// <summary>

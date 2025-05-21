@@ -2,6 +2,9 @@
 
 namespace Application.Common.Models;
 
+/// <summary>
+/// Model representing a movie from the StarWarsAPI.
+/// </summary>
 public class MovieApiModel
 {
     [JsonPropertyName("title")]

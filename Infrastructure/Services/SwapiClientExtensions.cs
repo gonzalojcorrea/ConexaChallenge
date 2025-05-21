@@ -7,6 +7,9 @@ using Polly.Timeout;
 
 namespace Infrastructure.Services;
 
+/// <summary>
+/// Extension methods for adding SwapiClient with resilience policies.
+/// </summary>
 public static class SwapiClientExtensions
 {
     /// <summary>

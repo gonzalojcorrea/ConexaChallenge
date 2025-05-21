@@ -2,6 +2,9 @@
 
 namespace Application.Features.Auth.Queries.LoginUser;
 
+/// <summary>
+/// Validator for the LoginUserQuery.
+/// </summary>
 public class LoginUserQueryValidation : AbstractValidator<LoginUserQuery>
 {
     public LoginUserQueryValidation()

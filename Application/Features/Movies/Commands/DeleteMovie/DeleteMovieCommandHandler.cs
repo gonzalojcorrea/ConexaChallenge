@@ -4,6 +4,9 @@ using MediatR;
 
 namespace Application.Features.Movies.Commands.DeleteMovie;
 
+/// <summary>
+/// Command to delete a movie.
+/// </summary>
 public class DeleteMovieCommandHandler : IRequestHandler<DeleteMovieCommand, Unit>
 {
     private readonly IUnitOfWork _uow;

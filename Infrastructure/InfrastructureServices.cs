@@ -7,9 +7,6 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Polly.Extensions.Http;
-using Polly.Timeout;
-using Polly;
 
 namespace Infrastructure;
 

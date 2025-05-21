@@ -11,16 +11,16 @@ namespace Application.Features.Auth.Commands.RegisterUser;
 /// </summary>
 public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, string>
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _uof;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly IJwtService _jwtTokenGenerator;
 
     public RegisterUserCommandHandler(
-        IUnitOfWork unitOfWork,
+        IUnitOfWork uof,
         IPasswordHasher<User> passwordHasher,
         IJwtService jwtTokenGenerator)
     {
-        _unitOfWork = unitOfWork;
+        _uof = uof;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
     }
@@ -28,11 +28,11 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, s
     public async Task<string> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         // Validate the request
-        if (await _unitOfWork.Users.GetByUsernameAsync(request.Username) is not null)
+        if (await _uof.Users.GetByUsernameAsync(request.Username) is not null)
             throw new BadRequestException("El nombre de usuario ya está en uso.");
 
         // Check if the role exists
-        var role = await _unitOfWork.Roles.GetByNameAsync(request.Role)
+        var role = await _uof.Roles.GetByNameAsync(request.Role)
             ?? throw new NotFoundException($"El rol '{request.Role}' no existe.");
 
         // Create a new user
@@ -48,8 +48,8 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, s
         user.PasswordHash = hashed;
 
         // Add the user to the database
-        await _unitOfWork.Users.AddAsync(user);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        await _uof.Users.AddAsync(user);
+        await _uof.CommitAsync(cancellationToken);
 
         // Generate a JWT token for the user
         return _jwtTokenGenerator.GenerateToken(user);

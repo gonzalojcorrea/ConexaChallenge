@@ -14,6 +14,10 @@ public class UnitOfWork : IUnitOfWork
     public IUserRepository Users { get; }
     public IRoleRepository Roles { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnitOfWork"/> class with the specified context.
+    /// </summary>
+    /// <param name="context"></param>
     public UnitOfWork(AppDbContext context)
     {
         _context = context;

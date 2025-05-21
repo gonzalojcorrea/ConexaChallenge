@@ -2,6 +2,9 @@
 
 namespace Application.Common.Interfaces;
 
+/// <summary>
+/// Unit of Work interface for managing transactions and repositories.
+/// </summary>
 public interface IUnitOfWork : IDisposable
 {
     IMovieRepository Movies { get; }

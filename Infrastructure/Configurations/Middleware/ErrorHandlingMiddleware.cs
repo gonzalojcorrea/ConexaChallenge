@@ -23,6 +23,11 @@ public class ErrorHandlingMiddleware
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles exceptions thrown in the pipeline.
+    /// </summary>
+    /// <param name="context"></param>
+    /// <returns></returns>
     public async Task InvokeAsync(HttpContext context)
     {
         try

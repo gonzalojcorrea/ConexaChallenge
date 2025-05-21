@@ -5,6 +5,9 @@ using MediatR;
 
 namespace Application.Features.Movies.Commands.UpdateMovie;
 
+/// <summary>
+/// Command to update an existing movie.
+/// </summary>
 public class UpdateMovieCommandHandler : IRequestHandler<UpdateMovieCommand, MovieDetailDto>
 {
     private readonly IUnitOfWork _uow;

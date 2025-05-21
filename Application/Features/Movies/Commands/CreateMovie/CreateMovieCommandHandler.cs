@@ -2,7 +2,6 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Application.Features.Movies.Commands.CreateMovie;
 
@@ -20,11 +19,11 @@ public class CreateMovieCommandHandler : IRequestHandler<CreateMovieCommand, Gui
 
     public async Task<Guid> Handle(CreateMovieCommand request, CancellationToken cancellationToken)
     {
-        // Validate the request
+        // 1. Validate the request
         if (await _uof.Movies.GetByTitleAsync(request.Title, cancellationToken) is not null)
             throw new BadRequestException("El título de la película ya está en uso.");
 
-        // Create a new movie
+        // 2. Create a new movie
         var movie = new Movie
         {
             Title = request.Title,
@@ -35,11 +34,11 @@ public class CreateMovieCommandHandler : IRequestHandler<CreateMovieCommand, Gui
             Characters = request.Characters ?? new List<string>()
         };
 
-        // Add the movie to the database
+        // 3. Add the movie to the database
         await _uof.Movies.AddAsync(movie, cancellationToken);
         await _uof.CommitAsync(cancellationToken);
 
-        // Return the ID of the created movie
+        // 4. Return the ID of the created movie
         return movie.Id;
     }
 }

@@ -4,6 +4,9 @@ using MediatR;
 
 namespace Application.Features.Movies.Commands.SyncMovies;
 
+/// <summary>
+/// Command to synchronize movies.
+/// </summary>
 public class SyncMoviesCommandHandler : IRequestHandler<SyncMoviesCommand, Unit>
 {
     private readonly ISwapiClient _swapi;
@@ -19,11 +22,16 @@ public class SyncMoviesCommandHandler : IRequestHandler<SyncMoviesCommand, Unit>
 
     public async Task<Unit> Handle(SyncMoviesCommand request, CancellationToken ct)
     {
+        // 1. Fetch all movies from the SWAPI
         var films = await _swapi.GetAllFilmsAsync();
 
+        // 2. Check if any films were fetched
         foreach (var f in films)
         {
+            // 3. Check if the film already exists in the database
             var existing = await _uow.Movies.GetByTitleAsync(f.Title, ct);
+
+            // 4. If it doesn't exist, add it; otherwise, update it
             if (existing is null)
             {
                 await _uow.Movies.AddAsync(new Movie
@@ -46,6 +54,7 @@ public class SyncMoviesCommandHandler : IRequestHandler<SyncMoviesCommand, Unit>
             }
         }
 
+        // 5. Commit the changes to the database
         await _uow.CommitAsync(ct);
         return Unit.Value;
     }

@@ -2,6 +2,9 @@
 
 namespace Application.Features.Auth.Commands.RegisterUser;
 
+/// <summary>
+/// Validator for the RegisterUserCommand.
+/// </summary>
 public class RegisterUserCommandValidation : AbstractValidator<RegisterUserCommand>
 {
     public RegisterUserCommandValidation()

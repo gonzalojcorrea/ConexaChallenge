@@ -17,14 +17,14 @@ public class GetMoviesQueryHandler : IRequestHandler<GetMoviesQuery, IEnumerable
 
     public async Task<IEnumerable<MovieDto>> Handle(GetMoviesQuery request, CancellationToken cancellationToken)
     {
-        // Fetch all movies from the database
+        // 1. Fetch all movies from the database
         var movies = await _unitOfWork.Movies.GetAllAsync(cancellationToken);
 
-        // Check if the movies were fetched successfully
+        // 2. Check if any movies were found
         if (movies == null || !movies.Any())
             throw new NotFoundException("No movies found.");
 
-        // Map the movies to DTOs
+        // 3. Map the movies to DTOs
         return movies.Select(m => new MovieDto
         {
             Id = m.Id,

@@ -5,8 +5,7 @@ namespace Application.Features.Movies.Commands.UpdateMovie;
 /// <summary>
 /// Validator for the UpdateMovieCommand.
 /// </summary>
-public class UpdateMovieCommandValidator
-        : AbstractValidator<UpdateMovieCommand>
+public class UpdateMovieCommandValidator : AbstractValidator<UpdateMovieCommand>
 {
     public UpdateMovieCommandValidator()
     {

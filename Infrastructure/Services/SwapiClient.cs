@@ -5,23 +5,30 @@ using System.Text.Json.Serialization;
 
 namespace Infrastructure.Services;
 
+/// <summary>
+/// Implementation of the StarWarsAPI client.
+/// </summary>
 public class SwapiClient : ISwapiClient
 {
     private readonly HttpClient _http;
     public SwapiClient(HttpClient http) => _http = http;
 
+    /// <summary>
+    /// Fetches all films from the StarWarsAPI and resolves character names.
+    /// </summary>
+    /// <returns></returns>
     public async Task<IEnumerable<MovieApiModel>> GetAllFilmsAsync()
     {
-        // Fetch films
+        // 1. Fetch films
         var filmsResp = await _http.GetFromJsonAsync<SwapiResponse<MovieApiModel>>("films");
         if (filmsResp?.Result == null) return Enumerable.Empty<MovieApiModel>();
 
-        // Fetch all people once
+        // 2. Fetch all people once
         var peopleList = await _http.GetFromJsonAsync<PeopleListResponse>("people?page=1&limit=100");
         var charNameMap = peopleList?.Results
             .ToDictionary(p => p.Url, p => p.Name) ?? new Dictionary<string, string>();
 
-        // Map films with resolved character names
+        // 3. Map films with resolved character names
         return filmsResp.Result.Select(r => r.Properties)
             .Select(props => new MovieApiModel
             {
@@ -37,12 +44,20 @@ public class SwapiClient : ISwapiClient
     }
 }
 
+/// <summary>
+/// Generic class to represent a SWAPI entity.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class SwapiEntity<T>
 {
     [JsonPropertyName("properties")]
     public T Properties { get; set; } = default!;
 }
 
+/// <summary>
+/// Generic class to represent a SWAPI response.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class SwapiResponse<T>
 {
     [JsonPropertyName("message")]
@@ -52,7 +67,9 @@ public class SwapiResponse<T>
     public SwapiEntity<T>[] Result { get; set; } = default!;
 }
 
-// People list response
+/// <summary>
+/// Class to represent a person in the SWAPI.
+/// </summary>
 public class PersonListResult
 {
     [JsonPropertyName("uid")]
@@ -65,6 +82,9 @@ public class PersonListResult
     public string Url { get; set; } = default!;
 }
 
+/// <summary>
+/// Class to represent a list string of people in the SWAPI.
+/// </summary>
 public class PeopleListResponse
 {
     [JsonPropertyName("message")]

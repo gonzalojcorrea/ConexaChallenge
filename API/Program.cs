@@ -8,8 +8,18 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Swagger & Controllers
+// 1. API (Swagger, CORS, Controllers)
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -35,10 +45,10 @@ builder.Services
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
-// 2. Infrastructure (EF, Repos, UoW, Authentication & Authorization)
+// 2. Infrastructure (EF Core, JWT, Repositories, External Services)
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Default"), builder.Configuration);
 
-// 3. Application (MediatR & PasswordHasher)
+// 3. Application (CQRS, MediatR, FluentValidation, PasswordHash)
 builder.Services.AddApplicationLayer();
 
 var app = builder.Build();
