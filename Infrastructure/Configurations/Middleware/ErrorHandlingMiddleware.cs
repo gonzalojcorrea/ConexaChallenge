@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Polly.CircuitBreaker;
+using Polly.Timeout;
 using System.Net;
 using System.Text.Json;
 
@@ -78,7 +80,52 @@ public class ErrorHandlingMiddleware
 
             await WriteProblemAsync(context, problem);
         }
-        // 4. Fallback → 500
+        // 4. Circuit breaker open → 503 Service Unavailable
+        catch (BrokenCircuitException ex)
+        {
+            _logger.LogWarning(ex, "Circuit breaker is open, external service unavailable");
+
+            var problem = new ProblemDetails
+            {
+                Type = "https://api.conexa.com/errors/service-unavailable",
+                Title = "Service Unavailable",
+                Status = (int)HttpStatusCode.ServiceUnavailable,
+                Detail = "External service is temporarily unavailable. Please try again later."
+            };
+
+            await WriteProblemAsync(context, problem);
+        }
+        // 5. Timeout → 504 Gateway Timeout
+        catch (TimeoutRejectedException ex)
+        {
+            _logger.LogWarning(ex, "Request to external service timed out");
+
+            var problem = new ProblemDetails
+            {
+                Type = "https://api.conexa.com/errors/gateway-timeout",
+                Title = "Gateway Timeout",
+                Status = (int)HttpStatusCode.GatewayTimeout,
+                Detail = "Request to external service timed out."
+            };
+
+            await WriteProblemAsync(context, problem);
+        }
+        // 6. HTTP failures → 502 Bad Gateway
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "HTTP request to external service failed");
+
+            var problem = new ProblemDetails
+            {
+                Type = "https://api.conexa.com/errors/bad-gateway",
+                Title = "Bad Gateway",
+                Status = (int)HttpStatusCode.BadGateway,
+                Detail = ex.Message
+            };
+
+            await WriteProblemAsync(context, problem);
+        }
+        // 7. Fallback → 500 Internal Server Error
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unexpected error occurred.");
@@ -86,7 +133,7 @@ public class ErrorHandlingMiddleware
             var problem = new ProblemDetails
             {
                 Type = "https://api.conexa.com/errors/internal-server-error",
-                Title = ex.Message,
+                Title = "Internal Server Error",
                 Status = (int)HttpStatusCode.InternalServerError,
                 Detail = ex.ToString()
             };

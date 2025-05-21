@@ -11,7 +11,10 @@ public class MovieDetailDto
     public Guid Id { get; set; }
     public string Title { get; set; }
     public string Director { get; set; }
+    public string Producer { get; set; }
     public DateTime ReleaseDate { get; set; }
+    public string OpeningCrawl { get; set; }
+    public List<string> Characters { get; set; }
 
     /// <summary>
     /// Converts a Movie entity to a MovieDetailDto.
@@ -24,7 +27,10 @@ public class MovieDetailDto
             Id = m.Id,
             Title = m.Title,
             Director = m.Director,
-            ReleaseDate = m.ReleaseDate
+            Producer = m.Producer,
+            ReleaseDate = m.ReleaseDate,
+            OpeningCrawl = m.OpeningCrawl,
+            Characters = m.Characters
         };
     }
 }

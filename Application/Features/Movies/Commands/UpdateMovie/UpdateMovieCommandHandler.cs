@@ -21,7 +21,10 @@ public class UpdateMovieCommandHandler : IRequestHandler<UpdateMovieCommand, Mov
         // 2. Apply updates
         movie.Title = request.Data.Title;
         movie.Director = request.Data.Director;
-        movie.ReleaseDate = (DateTime)request.Data.ReleaseDate;
+        movie.Producer = request.Data.Producer;
+        movie.ReleaseDate = request.Data.ReleaseDate;
+        movie.OpeningCrawl = request.Data.OpeningCrawl;
+        movie.Characters = request.Data.Characters ?? new List<string>();
 
         // 3. Persist the changes
         _uow.Movies.Update(movie);
