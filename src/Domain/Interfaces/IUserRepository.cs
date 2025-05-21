@@ -16,10 +16,10 @@ public interface IUserRepository
     Task AddAsync(User user, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Retrieves a user by their username.
+    /// Retrieves a user by their email.
     /// </summary>
-    /// <param name="username"></param>
+    /// <param name="email"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
+    Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
 }

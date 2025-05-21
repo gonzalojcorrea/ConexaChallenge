@@ -46,7 +46,7 @@ public class RegisterUserCommandHandlerTests
         // Arrange: command with duplicate username
         var cmd = new RegisterUserCommand("user@mail.com", "pass123", "User");
         _userRepoMock
-            .Setup(r => r.GetByUsernameAsync(cmd.Email, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByEmailAsync(cmd.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new User());
 
         // Act: handle the command
@@ -55,7 +55,7 @@ public class RegisterUserCommandHandlerTests
         // Assert: check that a BadRequestException is thrown
         await act.Should()
             .ThrowAsync<BadRequestException>()
-            .WithMessage("El nombre de usuario ya está en uso.");
+            .WithMessage("El email ingresado ya está en uso.");
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public class RegisterUserCommandHandlerTests
         // Arrange: command with unique username and non-existing role
         var cmd = new RegisterUserCommand("user@mail.com", "pass123", "Admin");
         _userRepoMock
-            .Setup(r => r.GetByUsernameAsync(cmd.Email, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByEmailAsync(cmd.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null);
         _roleRepoMock
             .Setup(r => r.GetByNameAsync(cmd.Role, It.IsAny<CancellationToken>()))
@@ -96,7 +96,7 @@ public class RegisterUserCommandHandlerTests
 
         // Mock the user repository to return null for the username
         _userRepoMock
-            .Setup(r => r.GetByUsernameAsync(cmd.Email, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByEmailAsync(cmd.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null);
         _roleRepoMock
             .Setup(r => r.GetByNameAsync(cmd.Role, It.IsAny<CancellationToken>()))
@@ -114,7 +114,7 @@ public class RegisterUserCommandHandlerTests
         // Assert: check that the user was added and the token was generated
         token.Should().Be("mocked-token");
         _userRepoMock.Verify(r => r.AddAsync(It.Is<User>(u =>
-            u.Username == cmd.Email &&
+            u.Email == cmd.Email &&
             u.RoleId == role.Id &&
             u.PasswordHash == "hashed-password"
         ), It.IsAny<CancellationToken>()), Times.Once);

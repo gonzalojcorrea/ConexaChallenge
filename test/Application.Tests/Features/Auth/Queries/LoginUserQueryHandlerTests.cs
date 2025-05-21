@@ -48,7 +48,7 @@ public class LoginUserQueryHandlerTests
         // Arrange: repository returns null
         var username = "nonexistent";
         _userRepoMock
-            .Setup(r => r.GetByUsernameAsync(username, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByEmailAsync(username, It.IsAny<CancellationToken>()))
             .ReturnsAsync((User)null);
 
         var query = new LoginUserQuery(username, "anyPwd");
@@ -70,9 +70,9 @@ public class LoginUserQueryHandlerTests
     public async Task Handle_WhenPasswordIncorrect_ThrowsBadRequestException()
     {
         // Arrange: repository returns a user
-        var user = new User { Username = "user1", PasswordHash = "hash" };
+        var user = new User { Email = "user1", PasswordHash = "hash" };
         _userRepoMock
-            .Setup(r => r.GetByUsernameAsync(user.Username, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByEmailAsync(user.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
         // Hasher fails verification
@@ -80,7 +80,7 @@ public class LoginUserQueryHandlerTests
             .Setup(h => h.VerifyHashedPassword(user, user.PasswordHash, "wrongPwd"))
             .Returns(PasswordVerificationResult.Failed);
 
-        var query = new LoginUserQuery(user.Username, "wrongPwd");
+        var query = new LoginUserQuery(user.Email, "wrongPwd");
 
         // Act
         Func<Task> act = () => _handler.Handle(query, CancellationToken.None);
@@ -99,9 +99,9 @@ public class LoginUserQueryHandlerTests
     public async Task Handle_WhenCredentialsValid_ReturnsJwtToken()
     {
         // Arrange: repository returns a user
-        var user = new User { Username = "user2", PasswordHash = "hash2" };
+        var user = new User { Email = "user2", PasswordHash = "hash2" };
         _userRepoMock
-            .Setup(r => r.GetByUsernameAsync(user.Username, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByEmailAsync(user.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
         // Hasher succeeds verification
@@ -115,7 +115,7 @@ public class LoginUserQueryHandlerTests
             .Setup(j => j.GenerateToken(user))
             .Returns(expectedToken);
 
-        var query = new LoginUserQuery(user.Username, "correctPwd");
+        var query = new LoginUserQuery(user.Email, "correctPwd");
 
         // Act
         var token = await _handler.Handle(query, CancellationToken.None);

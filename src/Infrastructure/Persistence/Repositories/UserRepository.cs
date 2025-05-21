@@ -24,11 +24,11 @@ public class UserRepository : IUserRepository
     /// <summary>
     /// Gets a user by their ID.
     /// </summary>
-    /// <param name="username"></param>
+    /// <param name="email"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         => await _context.Users
             .Include(u => u.Role)
-            .FirstOrDefaultAsync(u => u.Username == username, cancellationToken);
+            .FirstOrDefaultAsync(u => u.Email.ToUpper() == email.ToUpper(), cancellationToken);
 }
