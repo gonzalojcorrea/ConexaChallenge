@@ -9,11 +9,11 @@ public class RegisterUserCommandValidation : AbstractValidator<RegisterUserComma
 {
     public RegisterUserCommandValidation()
     {
-        RuleFor(x => x.Username)
+        RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage("El nombre de usuario es obligatorio.")
-            .MinimumLength(3)
-            .WithMessage("El nombre de usuario debe tener al menos 3 caracteres.");
+            .WithMessage("El correo electrónico es obligatorio.")
+            .EmailAddress()
+            .WithMessage("El correo electrónico no es válido.");
 
         RuleFor(x => x.Password)
             .NotEmpty()

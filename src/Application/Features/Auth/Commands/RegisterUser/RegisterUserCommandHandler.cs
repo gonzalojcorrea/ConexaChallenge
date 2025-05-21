@@ -28,7 +28,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, s
     public async Task<string> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         // Validate the request
-        if (await _uof.Users.GetByUsernameAsync(request.Username) is not null)
+        if (await _uof.Users.GetByUsernameAsync(request.Email) is not null)
             throw new BadRequestException("El nombre de usuario ya está en uso.");
 
         // Check if the role exists
@@ -39,7 +39,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, s
         var user = new User
         {
             Id = Guid.NewGuid(),
-            Username = request.Username,
+            Username = request.Email,
             RoleId = role.Id,
         };
 
