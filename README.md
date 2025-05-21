@@ -1,121 +1,142 @@
 # Conexa Challenge
 
-**Proyecto**: Backend en .NET 8 (Clean Architecture) con PostgreSQL para gestión de películas y series.
+**Proyecto**: Backend en .NET 8 (Clean Architecture) con PostgreSQL para gestión de películas y series.
 
 ## 📋 Descripción
 
-Este repositorio contiene una API RESTful desarrollada en .NET 8 siguiendo la **Clean Architecture**. Permite:
+Esta API RESTful, construida en .NET 8 con Clean Architecture, ofrece:
 
-* Registro y autenticación de usuarios con **JWT**.
-* Roles: **Master** y **Padawan**.
-* CRUD completo de entidades `Movie`.
-* Sincronización de películas de Star Wars desde la API pública (\[swapi.tech]) con manejo de personajes.
-* Persistencia en **PostgreSQL** (uso de `JSONB` para listas de personajes).
-* Políticas de resiliencia con **Polly** (Retry, Circuit Breaker, Timeout).
-* Documentación automática con **Swagger / OpenAPI**.
+* **Autenticación y autorización** con JWT.
+* **Roles**: `Master` → administrador y `Padawan` → usuario regular.
+* **CRUD** de la entidad `Movie`, con campos `createdAt` y `deletedAt` para *soft delete*.
+* **Sincronización** de películas desde la API pública SWAPI, incluyendo nombres de personajes.
+* **Persistencia** en PostgreSQL (JSONB para lista de personajes).
+* **Resiliencia** con Polly: Retry, Circuit Breaker y Timeout.
+* **Documentación** automática via Swagger / OpenAPI.
 
 ## 📂 Estructura de carpetas
 
-```
-/API             ← Proyecto WebApi (.NET 8)
-/Application     ← Lógica de negocio, casos de uso (MediatR, Validators)
-/Domain          ← Entidades y modelos de dominio puros
-/Infrastructure  ← EF Core, repositorios, cliente SWAPI, middleware, configuración
+```bash
+/ API
+  ├─ Controllers           ← Endpoints y filtros (AuthController, MoviesController)
+  ├─ Program.cs            ← Configuración de servicios y middleware
+  ├─ Properties
+  └─ appsettings*.json     ← Configuraciones de entorno
+
+/ Application
+  ├─ Common               ← Dtos, Models, Interfaces genéricos (IUnitOfWork, IJwtService)
+  ├─ Features
+  │   ├─ Auth             ← Commands, Queries, Handlers, Validators para autenticación
+  │   └─ Movies           ← Commands, Queries, Handlers, Validators para películas
+  └─ Behaviors            ← Pipelines MediatR (Validation, Logging)
+
+/ Domain
+  ├─ Entities             ← Clases de dominio (Movie, User, BaseEntity)
+  ├─ Interfaces           ← Interfaces de dominio (repositorios, servicios)
+  └─ Constants            ← Definición de Roles, mensajes globales
+
+/ Infrastructure
+  ├─ Persistence
+  │   ├─ Configurations   ← DbContext, EF Core mappings, QueryFilters
+  │   ├─ Repositories      ← Implementaciones de repos para cada entidad
+  │   └─ Migrations        ← Migraciones EF Core
+  ├─ Services
+  │   └─ SwapiClient      ← Cliente HTTP y resiliencia con Polly
+  ├─ Configurations       ← Middleware global, Filtros, Extensiones DI
+  └─ Seed                 ← Datos iniciales (usuarios, roles)
+
 ConexaChallenge.sln
-docker-compose.yml
+
+docker-compose.yml       ← Levanta API + PostgreSQL con migraciones y seed automáticos
 ```
 
 ## 🚀 Tecnologías
 
-* .NET 8, C#
+* .NET 8 / C# 12
 * MediatR
 * FluentValidation
-* Entity Framework Core (Npgsql)
-* PostgreSQL (JSONB)
+* Entity Framework Core + Npgsql
+* PostgreSQL 12+ (JSONB)
 * Polly (Retry, Circuit Breaker, Timeout)
-* Microsoft.AspNetCore.Authentication.JwtBearer
-* Swashbuckle (Swagger / OpenAPI)
+* JWT Bearer
+* Swashbuckle (Swagger)
 
 ## ⚙️ Requisitos
 
-* [.NET 8 SDK](https://dotnet.microsoft.com/download)
-* PostgreSQL 12+
-* Docker & Docker Compose (opcional)
+* [.NET 8 SDK](https://dotnet.microsoft.com/download)
+* Docker & Docker Compose
 
-## 📝 Configuración
+## 🏁 Ejecución con Docker
 
-1. Clona el repositorio:
-
-   ```bash
-   git clone https://github.com/gonzalojcorrea/ConexaChallenge.git
-   cd ConexaChallenge
-   ```
-2. Levanta PostgreSQL + API.NET con Docker Compose:
-
-   ```bash
-   docker-compose up --build
-   ```
-
-## 🔧 Migraciones & Seed
-
-Una vez que el proyecto se levanta las migraciones corren de manera automática, en caso de que no las vea aplicadas en la base de datos puede ejecutar el siguiente comando:
-
-```
-dotnet ef database update --project Infrastructure --startup-project API
-```
-
-## ▶️ Ejecutar la API
+La forma recomendada de levantar todo es con Docker Compose. Desde la raíz del proyecto:
 
 ```bash
-dotnet run --project API
+docker-compose up --build
 ```
 
-Se expondrá en `https://localhost:5001` por defecto.
+* Levanta PostgreSQL y la API.
+* Aplica migraciones automáticamente.
+* Inserta datos *seed* (usuarios, roles, ejemplos de películas).
+
+> Una vez que el proyecto esté levantado correctamente, verifica en Docker que exista un contenedor llamado **conexachallenge** con los servicios **api-1** y **db-1** ejecutándose. Si ambos están activos, puedes continuar a la sección de documentación.
 
 ## 📑 Documentación Swagger
 
-Accede a la UI en:
+🔗 `http://localhost:8080/swagger/index.html`
 
-```
-https://localhost:5001/swagger/index.html
-```
+Si la interfaz no carga correctamente, haz un **hard refresh** con **Ctrl + F5** para vaciar la caché del navegador.
 
-Allí encontrarás todos los endpoints con ejemplos y modelos.
+## 📬 Postman – Colección de Prueba
+
+🎯 [Conexa StarWarsAPI Challenge](https://www.postman.com/mission-astronomer-45032345/workspace/conexa-starwarsapi-challenge/collection/38312395-ef8eed31-fd14-4b25-ab0f-fc673d6aa32c?action=share&creator=38312395)
+
+* Al autenticarte con los endpoints **Login**, un script guarda el token en la variable `tokenChallenge`.
+* En **Get All Movies**, otro script extrae `firstMovieId` para usar en los endpoints que requieren un ID.
+
+## 👥 Usuarios de prueba
+
+| Username   | Rol     | Contraseña              |
+| ---------- | ------- | ----------------------- |
+| anakin     | Padawan | youunderestimatemypower |
+| obiwan     | Master  | ihavethehighground      |
+| yoda       | Master  | sizemattersnot          |
+| ahsokatano | Padawan | chosenonePadawan        |
 
 ## 📌 Endpoints principales
 
-| Ruta                 | Método | Descripción                   | Roles           |
-| -------------------- | ------ | ----------------------------- | --------------- |
-| `/api/auth/register` | POST   | Registrar nuevo usuario (JWT) | *anónimo*       |
-| `/api/auth/login`    | POST   | Autenticar usuario (JWT)      | *anónimo*       |
-| `/api/movies`        | GET    | Listar películas              | Master, Padawan |
-| `/api/movies/{id}`   | GET    | Detalle de película           | Master, Padawan |
-| `/api/movies`        | POST   | Crear nueva película          | Master          |
-| `/api/movies/{id}`   | PUT    | Actualizar película existente | Master          |
-| `/api/movies/{id}`   | DELETE | Eliminar película existente   | Master          |
-| `/api/movies/sync`   | POST   | Sincronizar desde SWAPI       | Master          |
+| Ruta                 | Método | Descripción                                   | Roles           |
+| -------------------- | ------ | --------------------------------------------- | --------------- |
+| `/api/auth/register` | POST   | Registra un usuario y devuelve JWT            | Anónimo         |
+| `/api/auth/login`    | POST   | Autentica y devuelve JWT                      | Anónimo         |
+| `/api/movies`        | GET    | Lista todas las películas                     | Master, Padawan |
+| `/api/movies/{id}`   | GET    | Detalle de una película                       | Master, Padawan |
+| `/api/movies`        | POST   | Crea una nueva película                       | Master          |
+| `/api/movies/{id}`   | PUT    | Actualiza una película existente              | Master          |
+| `/api/movies/{id}`   | DELETE | *Soft delete* de película (marca `deletedAt`) | Master          |
+| `/api/movies/sync`   | POST   | Sincroniza películas desde SWAPI              | Master          |
 
 ## 🛡️ Resiliencia SWAPI
 
-El cliente SWAPI está configurado con **Polly** para:
+Configurado con Polly para:
 
-* **Retry** lineal (3 intentos, +5s cada vez).
-* **Circuit Breaker** (3 fallos → circuito abierto 60s).
-* **Timeout** (20s por petición).
+* **Retry** lineal: 3 intentos, +5 s cada uno.
+* **Circuit Breaker**: abre tras 3 fallos consecutivos y se mantiene 60 s.
+* **Timeout**: cada petición externa tiene un límite de 20 s.
 
-## 💡 Buenas prácticas
+## 🗂️ Migraciones manuales
 
-* Uso de **Clean Architecture** para separar capas.
-* Validaciones centralizadas con **FluentValidation**.
-* Manejo global de errores con middleware (`ProblemDetails`).
-* Seguridad mediante **JWT** y roles tipados.
+En caso de necesitar ejecutar migraciones manualmente:
 
-## 🚀 Próximos pasos / Mejora
+```bash
+dotnet ef database update --project Infrastructure --startup-project API
+```
 
-* Agregar pruebas unitarias y de integración.
-* Paginación en listados.
-* Caché de llamadas SWAPI para optimizar.
-* Despliegue en la nube (Azure, AWS, Heroku).
+## 💡 Próximas mejoras
+
+* Pruebas unitarias e integración.
+* Paginación y filtrado en listados.
+* Caché de SWAPI para optimizar llamadas.
+* Despliegue automatizado en la nube.
 
 ---
 
