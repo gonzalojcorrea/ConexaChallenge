@@ -28,7 +28,7 @@ public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, string>
     public async Task<string> Handle(LoginUserQuery request, CancellationToken cancellationToken)
     {
         // Validate the request
-        var user = await _uow.Users.GetByEmailAsync(request.Username)
+        var user = await _uow.Users.GetByEmailAsync(request.Email)
             ?? throw new BadRequestException("Usuario o contraseña inválidos.");
 
         // Check if the user is active

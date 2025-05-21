@@ -9,9 +9,9 @@ public class LoginUserQueryValidation : AbstractValidator<LoginUserQuery>
 {
     public LoginUserQueryValidation()
     {
-        RuleFor(x => x.Username)
+        RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage("El nombre de usuario es obligatorio.");
+            .WithMessage("El correo electrónico es obligatorio.");
 
         RuleFor(x => x.Password)
             .NotEmpty()
