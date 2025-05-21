@@ -45,4 +45,10 @@ public interface IMovieRepository
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public void Update(Movie movie);
+
+    /// <summary>
+    /// Delete a movie from the repository.
+    /// </summary>
+    /// <param name="id"></param>
+    public void SoftDelete(Movie movie);
 }

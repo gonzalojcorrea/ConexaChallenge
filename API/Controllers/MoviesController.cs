@@ -1,6 +1,7 @@
 ﻿using Application.Common.Dtos;
 using Application.Common.Models;
 using Application.Features.Movies.Commands.CreateMovie;
+using Application.Features.Movies.Commands.DeleteMovie;
 using Application.Features.Movies.Commands.SyncMovies;
 using Application.Features.Movies.Commands.UpdateMovie;
 using Application.Features.Movies.Queries.GetMovieById;
@@ -134,7 +135,7 @@ public class MoviesController : ControllerBase
     /// <returns>A 200 OK status indicating successful synchronization.</returns>
     [HttpPost("sync")]
     [Authorize(Roles = "Admin")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SuccessResponse<string>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
@@ -150,5 +151,29 @@ public class MoviesController : ControllerBase
     {
         await _mediator.Send(new SyncMoviesCommand());
         return Ok(new { message = "Movies synchronized successfully." });
+    }
+
+    /// <summary>
+    /// Deletes an existing movie by its ID.
+    /// </summary>
+    /// <param name="id">The GUID of the movie to delete.</param>
+    /// <returns>204 No Content on success.</returns>
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(SuccessResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Delete a movie",
+        Description = "Deletes the movie with the given GUID. Requires Admin role."
+    )]
+    [SwaggerResponse(200, "Movie deleted successfully")]
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
+    {
+        await _mediator.Send(new DeleteMovieCommand(id));
+        return Ok("Movie deleted successfully");
     }
 }

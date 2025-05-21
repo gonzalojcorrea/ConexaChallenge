@@ -52,4 +52,11 @@ public class MovieRepository : IMovieRepository
     /// <param name="movie"></param>
     public void Update(Movie movie) 
         => _context.Movies.Update(movie);
+
+    /// <summary>
+    /// Soft deletes a movie from the database.
+    /// </summary>
+    /// <param name="movie"></param>
+    public void SoftDelete(Movie movie)
+        => _context.Movies.Remove(movie);
 }
