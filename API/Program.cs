@@ -4,12 +4,23 @@ using Infrastructure.Configurations.Filters;
 using Infrastructure.Configurations.Middleware;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Swagger & Controllers
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Conexa Challenge API",
+        Version = "v1"
+    });
+    c.EnableAnnotations();
+});
+
 builder.Services
     .AddControllers(options =>
     {
@@ -32,11 +43,11 @@ builder.Services.AddApplicationLayer();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Conexa API v1");
+});
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();

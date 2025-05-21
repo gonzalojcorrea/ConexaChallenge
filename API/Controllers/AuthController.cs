@@ -1,7 +1,9 @@
-﻿using Application.Features.Auth.Commands.RegisterUser;
+﻿using Application.Common.Models;
+using Application.Features.Auth.Commands.RegisterUser;
 using Application.Features.Auth.Queries.LoginUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers;
 
@@ -18,24 +20,44 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Registers a new user and returns a JWT token.
     /// </summary>
-    /// <param name="cmd"></param>
-    /// <returns></returns>
+    /// <param name="cmd">Registration data: username, password, and role.</param>
+    /// <returns>JWT token wrapped in a SuccessResponse.</returns>
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterUserCommand cmd)
+    [SwaggerOperation(
+        Summary = "Register a new user",
+        Description = "Creates a new user account with the specified role and returns an access JWT token."
+    )]
+    [SwaggerResponse(200, "User registered successfully", typeof(SuccessResponse<string>))]
+    [SwaggerResponse(400, "Validation errors or bad request", typeof(ErrorResponse))]
+    [SwaggerResponse(404, "Role not found", typeof(ErrorResponse))]
+    [SwaggerResponse(500, "Internal server error", typeof(ErrorResponse))]
+    public async Task<ActionResult<string>> Register(
+        [SwaggerRequestBody("User registration payload", Required = true)]
+        [FromBody] RegisterUserCommand cmd)
     {
         var token = await _mediator.Send(cmd);
         return Ok(token);
-    } 
+    }
 
     /// <summary>
     /// Logs in an existing user and returns a JWT token.
     /// </summary>
-    /// <param name="qry"></param>
-    /// <returns></returns>
+    /// <param name="qry">Login data: username and password.</param>
+    /// <returns>JWT token wrapped in a SuccessResponse.</returns>
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginUserQuery qry)
+    [SwaggerOperation(
+        Summary = "Login user",
+        Description = "Authenticates a user and returns an access JWT token."
+    )]
+    [SwaggerResponse(200, "User authenticated successfully", typeof(SuccessResponse<string>))]
+    [SwaggerResponse(400, "Invalid credentials", typeof(ErrorResponse))]
+    [SwaggerResponse(500, "Internal server error", typeof(ErrorResponse))]
+    public async Task<ActionResult<string>> Login(
+        [SwaggerRequestBody("User login payload", Required = true)]
+        [FromBody] LoginUserQuery qry)
     {
         var token = await _mediator.Send(qry);
+
         return Ok(token);
     }
 }
