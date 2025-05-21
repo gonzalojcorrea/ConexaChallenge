@@ -32,9 +32,4 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Auth\Commands\" />
-    <Folder Include="Fixtures\" />
-  </ItemGroup>
-
 </Project>

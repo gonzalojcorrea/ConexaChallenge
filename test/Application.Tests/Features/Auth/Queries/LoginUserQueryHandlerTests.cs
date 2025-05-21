@@ -9,6 +9,9 @@ using Moq;
 
 namespace Application.Tests.Features.Auth.Queries;
 
+/// <summary>
+/// Unit tests for the LoginUserQueryHandler.
+/// </summary>
 public class LoginUserQueryHandlerTests
 {
     private readonly Mock<IUnitOfWork> _uowMock;
@@ -35,6 +38,10 @@ public class LoginUserQueryHandlerTests
             _jwtServiceMock.Object);
     }
 
+    /// <summary>
+    /// Test to ensure that the handler throws a BadRequestException when the user is not found.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task Handle_WhenUserNotFound_ThrowsBadRequestException()
     {
@@ -55,6 +62,10 @@ public class LoginUserQueryHandlerTests
                  .WithMessage("Usuario o contraseña inválidos.");
     }
 
+    /// <summary>
+    /// Test to ensure that the handler throws a BadRequestException when the password is incorrect.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task Handle_WhenPasswordIncorrect_ThrowsBadRequestException()
     {
@@ -80,6 +91,10 @@ public class LoginUserQueryHandlerTests
                  .WithMessage("Usuario o contraseña inválidos.");
     }
 
+    /// <summary>
+    /// Test to ensure that the handler returns a JWT token when the credentials are valid.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task Handle_WhenCredentialsValid_ReturnsJwtToken()
     {
