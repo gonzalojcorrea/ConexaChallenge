@@ -9,9 +9,31 @@ public class CreateMovieCommandValidator : AbstractValidator<CreateMovieCommand>
 {
     public CreateMovieCommandValidator()
     {
-        RuleFor(x => x.Title).NotEmpty().WithMessage("Título obligatorio");
+        RuleFor(x => x.Title)
+            .NotEmpty()
+            .WithMessage("Título obligatorio")
+            .MaximumLength(200).WithMessage("Título no puede ser mayor a 100 caracteres");
+
+        RuleFor(x => x.Director)
+            .NotEmpty()
+            .WithMessage("Director obligatorio")
+            .MaximumLength(100)
+            .WithMessage("Director no puede ser mayor a 100 caracteres");
+
+        RuleFor(x => x.Producer)
+            .NotEmpty()
+            .WithMessage("Productor obligatorio")
+            .MaximumLength(100)
+            .WithMessage("Productor no puede ser mayor a 100 caracteres");
+
         RuleFor(x => x.ReleaseDate)
-            .LessThanOrEqualTo(DateTime.Now)
-            .WithMessage("Fecha de estreno no puede ser futura");
+            .NotEmpty();
+
+        RuleFor(x => x.OpeningCrawl)
+            .MaximumLength(2000).WithMessage("OpeningCrawl no puede ser mayor a 1000 caracteres");
+
+        RuleFor(x => x.Characters)
+            .Must(x => x.Count <= 20)
+            .WithMessage("No puede haber más de 20 personajes");
     }
 }

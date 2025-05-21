@@ -29,7 +29,10 @@ public class CreateMovieCommandHandler : IRequestHandler<CreateMovieCommand, Gui
         {
             Title = request.Title,
             Director = request.Director,
-            ReleaseDate = request.ReleaseDate
+            Producer = request.Producer,
+            ReleaseDate = request.ReleaseDate,
+            OpeningCrawl = request.OpeningCrawl,
+            Characters = request.Characters ?? new List<string>()
         };
 
         // Add the movie to the database

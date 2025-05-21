@@ -18,12 +18,6 @@ public class GetMovieByIdQueryHandler : IRequestHandler<GetMovieByIdQuery, Movie
         var movie = await _unitOfWork.Movies.GetByIdAsync(request.Id, ct)
                     ?? throw new NotFoundException($"Movie with Id {request.Id} not found.");
 
-        return new MovieDetailDto
-        {
-            Id = movie.Id,
-            Title = movie.Title,
-            Director = movie.Director,
-            ReleaseDate = movie.ReleaseDate
-        };
+        return (MovieDetailDto)movie;
     }
 }

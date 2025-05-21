@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Common.Dtos;
+using MediatR;
 
 namespace Application.Features.Movies.Commands.CreateMovie;
 
@@ -8,5 +9,12 @@ namespace Application.Features.Movies.Commands.CreateMovie;
 /// <param name="Title"></param>
 /// <param name="Director"></param>
 /// <param name="ReleaseDate"></param>
-public record CreateMovieCommand(string Title, string Director, DateTime ReleaseDate)
+public record CreateMovieCommand(
+    string Title,
+    string Director,
+    string Producer,
+    DateTime ReleaseDate,
+    string OpeningCrawl,
+    List<string> Characters)
+
     : IRequest<Guid>;
