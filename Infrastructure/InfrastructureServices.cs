@@ -7,6 +7,9 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly.Extensions.Http;
+using Polly.Timeout;
+using Polly;
 
 namespace Infrastructure;
 
@@ -39,10 +42,8 @@ public static class InfrastructureServices
         services.AddAuthenticationExtension(configuration, jwt);
         services.AddAuthorization();
 
-        services.AddHttpClient<ISwapiClient, SwapiClient>(c =>
-        {
-            c.BaseAddress = new Uri("https://www.swapi.tech/api/");
-        });
+        // 5. Configure StarWars Service whit resilience policies
+        services.AddSwapiClient();
 
         return services;
     }
