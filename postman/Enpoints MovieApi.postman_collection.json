@@ -1,0 +1,524 @@
+{
+	"info": {
+		"_postman_id": "f503752b-a9e4-4ddc-9188-d5522bc27b99",
+		"name": "Enpoints MovieApi",
+		"description": "# 🌠 Conexa StarWarsAPI Challenge\n\nEsta colección de Postman te permite explorar y probar la API de Conexa para gestión de películas, construida en .NET 8 con Clean Architecture y PostgreSQL.\n\n---\n\n## 🔧 Configuración\n\n### 1\\. **Base URL**\n\nSi ejecutaste el docker compose tal cual como estaba, no hace falta que modifiques la variable. De lo contrario define la variable de entorno `baseUrl` apuntando a tu API local, por ejemplo: `baseUrl` = [http://localhost:8080<br>](http://localhost:8080/swagger/index.html)\n\n### 2\\. **Autenticación**\n\n- Ejecuta **Register** (`POST {{baseUrl}}/api/auth/sign-up`) o **Login** (`POST {{baseUrl}}/api/auth/login`).\n    \n- En la pestaña **Tests**, un script guardará el JWT en `tokenChallenge`.\n    \n- Los endpoint del CRUD de Movies estableceran:\n    \n    - `Authorization: Bearer {{tokenChallenge}}`\n        \n\n---\n\n## 📋 Variables de colección\n\n| Variable | Descripción |\n| --- | --- |\n| `baseUrl` | URL base de la API (por ejemplo `http://localhost:8080`) |\n| `tokenChallenge` | JWT obtenido tras Login/Sign-Up |\n| `firstMovieId` | ID de la primera película extraída con **Get All Movies** |\n\n---\n\n## 👥 Usuarios de prueba\n\n| Usuario | Rol | Contraseña |\n| --- | --- | --- |\n| **anakin** | Padawan | `youunderestimatemypower` |\n| **obiwan** | Master | `ihavethehighground` |\n\n---\n\n## 🚀 Endpoints incluidos\n\n| Método | Ruta | Descripción | Rol requerido |\n| --- | --- | --- | --- |\n| POST | `/api/auth/register` | Registra un usuario y devuelve JWT | — |\n| POST | `/api/auth/login` | Autentica un usuario y devuelve JWT | — |\n| GET | `/api/movies` | Lista todas las películas | Master, Padawan |\n| GET | `/api/movies/{{firstMovieId}}` | Detalle de una película | Master, Padawan |\n| POST | `/api/movies` | Crea una nueva película | Master |\n| PUT | `/api/movies/{{firstMovieId}}` | Actualiza una película existente | Master |\n| DELETE | `/api/movies/{{firstMovieId}}` | Elimina (soft delete) una película | Master |\n| POST | `/api/movies/sync` | Sincroniza películas desde SWAPI | Master |\n\n---\n\n## 🛠️ Flujo de trabajo sugerido\n\n1. **Login** → guarda `tokenChallenge`\n    \n2. **Get All Movies** → genera `firstMovieId`\n    \n3. Usa `{{firstMovieId}}` en **Get By Id**, **PUT**, **DELETE**\n    \n4. Prueba **Create** y **Sync** para administrar la colección de películas\n    \n\n---\n\n**¡May the force be whit you!**",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38312395"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login - Padawan User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"pm.test(\"Response has a token\", () => pm.expect(json).to.have.property(\"data\"));\r",
+									"\r",
+									"const token = json.data;\r",
+									"pm.collectionVariables.set(\"TokenChallenge\", token);\r",
+									"\r",
+									"console.log(\"🚀 JWT saved:\", token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"anakin@jedi.com\",\r\n  \"password\": \"youunderestimatemypower\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/auth/login",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Master User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"pm.test(\"Response has a token\", () => pm.expect(json).to.have.property(\"data\"));\r",
+									"\r",
+									"const token = json.data;\r",
+									"pm.collectionVariables.set(\"TokenChallenge\", token);\r",
+									"\r",
+									"console.log(\"🚀 JWT saved:\", token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"obiwan@jedi.com\",\r\n  \"password\": \"ihavethehighground\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/auth/login",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign up - Padawan User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"pm.test(\"Response has a token\", () => pm.expect(json).to.have.property(\"data\"));\r",
+									"\r",
+									"const token = json.data;\r",
+									"pm.collectionVariables.set(\"TokenChallenge\", token);\r",
+									"\r",
+									"console.log(\"🚀 JWT saved:\", token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"ahsoka@jedi.com\",\r\n  \"password\": \"yourmasteristhechosenone\",\r\n  \"role\": \"padawan\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/auth/sign-up",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign up - Master User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"pm.test(\"Response has a token\", () => pm.expect(json).to.have.property(\"data\"));\r",
+									"\r",
+									"const token = json.data;\r",
+									"pm.collectionVariables.set(\"TokenChallenge\", token);\r",
+									"\r",
+									"console.log(\"🚀 JWT saved:\", token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"macewindu@jedi.com\",\r\n  \"password\": \"purplelightsaber\",\r\n  \"role\": \"master\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/auth/sign-up",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints de Autorización",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Movies",
+			"item": [
+				{
+					"name": "Get All Movies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Data is a non-empty array\", () => {\r",
+									"    pm.expect(Array.isArray(json.data)).to.be.true;\r",
+									"    pm.expect(json.data.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"const firstMovie = json.data[0];\r",
+									"\r",
+									"pm.test(\"First movie has id\", () => {\r",
+									"    pm.expect(firstMovie).to.have.property(\"id\");\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"FirstMovieId\", firstMovie.id);\r",
+									"\r",
+									"console.log(\"🏆 First movie:\", firstMovie);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TokenChallenge}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/api/movies",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Movie By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TokenChallenge}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/api/movies/{{FirstMovieId}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"movies",
+								"{{FirstMovieId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync StarWars Movies",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TokenChallenge}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/api/movies/sync",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"movies",
+								"sync"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Movie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TokenChallenge}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Jaws\",\r\n  \"director\": \"Steven Spielberg\",\r\n  \"producer\": \"Richard D. Zanuck\",\r\n  \"releaseDate\": \"2025-05-21T03:09:45.195Z\",\r\n  \"openingCrawl\": \"Jaws… beneath the coastal waves at night, a shark takes a quick but fatal meal out of a swimming woman. Can you still hear her screams or see the floating sea beacon she held onto? How about that whole struggle that seemed to last hours when in fact it was barely a minute long or so? Fear the deep people, fishing season comin’ right up.\",\r\n  \"characters\": [\r\n    \"Chief Martin Brody\",\r\n    \"Matt Hooper\",\r\n    \"Quint\",\r\n    \"Ellen Brody\",\r\n    \"Mayor Larry Vaughn\",\r\n    \"Harry Meadows\",\r\n    \"Michael Brody\",\r\n    \"Deputy Hendricks\",\r\n    \"Mrs. Kintner\",\r\n    \"Ben Gardner\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/movies/",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"movies",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Movie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TokenChallenge}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Indiana Jones\",\r\n  \"director\": \"Steven Spielberg\",\r\n  \"producer\": \"Richard D. Zanuck\",\r\n  \"releaseDate\": \"2025-05-21T03:09:45.195Z\",\r\n  \"openingCrawl\": \"Tiburón… bajo las olas costeras durante la noche, un escualo da un bocado rápido pero letal a una mujer que nada. ¿Aún puedes oír sus gritos o ver la boya marina a la que se aferraba? ¿Y toda esa lucha que pareció durar horas cuando en realidad apenas duró un minuto? Temed, habitantes de las profundidades: la temporada de pesca está por comenzar.\",\r\n  \"characters\": [\r\n    \"Chief Martin Brody\",\r\n    \"Matt Hooper\",\r\n    \"Quint\",\r\n    \"Ellen Brody\",\r\n    \"Mayor Larry Vaughn\",\r\n    \"Harry Meadows\",\r\n    \"Michael Brody\",\r\n    \"Deputy Hendricks\",\r\n    \"Mrs. Kintner\",\r\n    \"Ben Gardner\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/movies/{{FirstMovieId}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"movies",
+								"{{FirstMovieId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Movie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TokenChallenge}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/api/movies/{{FirstMovieId}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"movies",
+								"{{FirstMovieId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints CRUD de Películas"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TokenChallenge}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "FirstMovieId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "TokenChallenge",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "BaseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
