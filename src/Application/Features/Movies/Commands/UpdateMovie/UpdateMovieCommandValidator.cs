@@ -47,9 +47,9 @@ public class UpdateMovieCommandValidator : AbstractValidator<UpdateMovieCommand>
                 .WithMessage("Opening crawl must be at most 2000 characters.");
 
             RuleFor(x => x.Data.Characters)
-                .NotEmpty()
-                .Must(x => x.Count <= 20)
-                .WithMessage("There cannot be more than 20 characters.");
+                .Cascade(CascadeMode.Stop)
+                .NotNull().WithMessage("La lista de personajes es obligatoria.")
+                .Must(x => x.Count <= 20).WithMessage("No puede haber más de 20 personajes");
         });
     }
 }
