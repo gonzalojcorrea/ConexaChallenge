@@ -30,9 +30,11 @@ public class CreateMovieCommandValidator : AbstractValidator<CreateMovieCommand>
             .NotEmpty();
 
         RuleFor(x => x.OpeningCrawl)
+            .NotEmpty()
             .MaximumLength(2000).WithMessage("OpeningCrawl no puede ser mayor a 1000 caracteres");
 
         RuleFor(x => x.Characters)
+            .NotEmpty()
             .Must(x => x.Count <= 20)
             .WithMessage("No puede haber más de 20 personajes");
     }

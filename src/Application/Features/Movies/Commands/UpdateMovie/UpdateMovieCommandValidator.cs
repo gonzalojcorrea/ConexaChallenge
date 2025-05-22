@@ -26,10 +26,12 @@ public class UpdateMovieCommandValidator : AbstractValidator<UpdateMovieCommand>
                 .WithMessage("Title must be at most 200 characters.");
 
             RuleFor(x => x.Data.Director)
+                .NotEmpty()
                 .MaximumLength(100)
                 .WithMessage("Description must be at most 1000 characters.");
 
             RuleFor(x => x.Data.Producer)
+                .NotEmpty()
                 .MaximumLength(100)
                 .WithMessage("Producer must be at most 100 characters.");
 
@@ -40,10 +42,12 @@ public class UpdateMovieCommandValidator : AbstractValidator<UpdateMovieCommand>
                 .WithMessage("Invalid release date.");
 
             RuleFor(x => x.Data.OpeningCrawl)
+                .NotEmpty()
                 .MaximumLength(2000)
                 .WithMessage("Opening crawl must be at most 2000 characters.");
 
             RuleFor(x => x.Data.Characters)
+                .NotEmpty()
                 .Must(x => x.Count <= 20)
                 .WithMessage("There cannot be more than 20 characters.");
         });
