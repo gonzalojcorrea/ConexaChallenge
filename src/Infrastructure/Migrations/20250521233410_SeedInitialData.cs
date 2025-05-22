@@ -47,17 +47,6 @@ namespace Infrastructure.Migrations
                 NULL
             ),
             (
-                'a1d6a44b-05b9-48a5-bbca-006e80fa2507',
-                'Star Wars: A New Hope',
-                'George Lucas',
-                'Gary Kurtz, Rick McCallum',
-                '1977-05-25T00:00:00Z',
-                'It is a period of civil war. Rebel spaceships, striking from a hidden base, have won their first victory against the evil Galactic Empire.…',
-                '[""Luke Skywalker"",""Princess Leia"",""Han Solo"",""Obi-Wan Kenobi"",""Darth Vader"",""Chewbacca"",""C-3PO"",""R2-D2"",""Grand Moff Tarkin"",""Biggs Darklighter""]'::jsonb,
-                NOW(),
-                NULL
-            ),
-            (
                 '417a5af0-5168-48c1-89c7-1fdf2470fa1e',
                 'The Matrix',
                 'Lana Wachowski, Lilly Wachowski',
