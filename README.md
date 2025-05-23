@@ -43,8 +43,7 @@ Esta API RESTful, construida en .NET 8 con Clean Architecture, ofrece:
   │   └─ Migrations        ← Migraciones EF Core
   ├─ Services
   │   └─ SwapiClient      ← Cliente HTTP y resiliencia con Polly
-  ├─ Configurations       ← Middleware global, Filtros, Extensiones DI
-  └─ Seed                 ← Datos iniciales (usuarios, roles, ejemplos de películas)
+  └─ Configurations       ← Middleware global, Filtros, Extensiones DI
 
 / Tests
   └─ API.Test             ← Proyectos de pruebas unitarias e integración basado en MediatR Commands
@@ -83,11 +82,12 @@ dotnet test --no-restore
 
 ## ⚙️ Requisitos
 
-* Docker & Docker Compose
+* Tener instalado [Docker](https://www.docker.com/)
 
 ## 🏁 Ejecución con Docker
 
-La forma recomendada de levantar todo es con Docker Compose. Desde la raíz del proyecto:
+La forma recomendada de levantar todo el proyecto es con Docker Compose.
+Desde la carpeta `MovieApi` donde se encuentra el archivo `docker-compose.yml` ejecuta el siguinte comando en tu consola:
 
 ```bash
 docker-compose up --build
@@ -101,18 +101,18 @@ docker-compose up --build
 
 ## 📑 Documentación Swagger
 
-🎯 [Link Swagger UI](http://localhost:8080/swagger/index.html)
+🎯 [Swagger UI: http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
 
 Si la interfaz no carga correctamente, haz un **hard refresh** con **Ctrl + F5**.
 
 ## 📬 Postman – Colección de Prueba
 
-🎯 [Conexa - MovieApi Challenge](https://www.postman.com/mission-astronomer-45032345/workspace/conexa-starwarsapi-challenge/collection/38312395-ef8eed31-fd14-4b25-ab0f-fc673d6aa32c?action=share&creator=38312395)
+🎯 [Enpoints Collection - MovieApi](https://www.postman.com/mission-astronomer-45032345/workspace/conexa-starwarsapi-challenge/collection/38312395-ef8eed31-fd14-4b25-ab0f-fc673d6aa32c?action=share&creator=38312395)
 
 * Al autenticarte, un script guarda el token en la variable `tokenChallenge`.
 * En **Get All Movies**, otro script extrae `firstMovieId`.
 
-> Si no puedes acceder al link anterior, importa la colección desde la carpeta `postman/` en la raíz del proyecto.
+> Si no puedes acceder al link anterior, importa la colección desde la carpeta `Postman/` en la raíz del proyecto.
 
 ## 👥 Usuarios de prueba
 
@@ -134,7 +134,9 @@ Si la interfaz no carga correctamente, haz un **hard refresh** con **Ctrl + F5**
 | `/api/movies/{id}`   | DELETE | *Soft delete* de película (marca `deletedAt`) | Master          |
 | `/api/movies/sync`   | POST   | Sincroniza películas desde SWAPI              | Master          |
 
-## 🛡️ Resiliencia SWAPI
+## 🛡️ Resiliencia en sincronización de películas con SWAPI
+
+🎯 [Star Wars Api](https://www.swapi.tech/)
 
 Configurado con Polly para:
 
@@ -156,4 +158,20 @@ dotnet ef database update --project Infrastructure --startup-project API
 
 ---
 
-**¡May The Force Be Whit You!**
+<p style="text-align: center; margin-top: 2em;">
+  <img
+    src="https://images.icon-icons.com/2904/PNG/512/jedi_logo_order_sigil_star_wars_icon_183158.png"
+    alt="Jedi Logo"
+    width="5%"
+    style="vertical-align: middle; margin-right: 0.5em;"
+  />
+  <span style="vertical-align: middle; font-size: 2em; margin: 0 0.5em;">
+    May The Force Be With You
+  </span>
+  <img
+    src="https://images.icon-icons.com/2904/PNG/512/jedi_logo_order_sigil_star_wars_icon_183158.png"
+    alt="Jedi Logo"
+    width="5%"
+    style="vertical-align: middle; margin-left: 0.5em;"
+  />
+</p>
