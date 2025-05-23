@@ -158,20 +158,20 @@ dotnet ef database update --project Infrastructure --startup-project API
 
 ---
 
-<p style="text-align: center; margin-top: 2em;">
+<h1 align="center">
   <img
     src="https://images.icon-icons.com/2904/PNG/512/jedi_logo_order_sigil_star_wars_icon_183158.png"
     alt="Jedi Logo"
-    width="5%"
-    style="vertical-align: middle; margin-right: 0.5em;"
+    width="50"
+    align="top"
+    hspace="8"
   />
-  <span style="vertical-align: middle; font-size: 2em; margin: 0 0.5em;">
-    May The Force Be With You
-  </span>
+  May The Force Be With You
   <img
     src="https://images.icon-icons.com/2904/PNG/512/jedi_logo_order_sigil_star_wars_icon_183158.png"
     alt="Jedi Logo"
-    width="5%"
-    style="vertical-align: middle; margin-left: 0.5em;"
+    width="50"
+    align="top"
+    hspace="4"
   />
-</p>
+</h1>
